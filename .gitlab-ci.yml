@@ -1,7 +1,7 @@
 image: docker:latest
 
 variables:
-    IMAGE: 192.168.1.3:5000/$CI_PROJECT_NAME:$CI_COMMIT_REF_SLUG
+    IMAGE: :5000/$CI_PROJECT_NAME:$CI_COMMIT_REF_SLUG
 
 stages:
     - build
@@ -10,6 +10,7 @@ build:
     stage: build
     services:
         - name: docker:dind
+          command: ["--insecure-registry=192.168.1.3:5000"]
     script:
         - docker login -u root -p root 192.168.1.3:5000
         - echo "login success"
