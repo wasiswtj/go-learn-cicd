@@ -6,9 +6,9 @@ stages:
 
 build:
     stage: build
-    image: docker:latest
+    image: docker:19
     services:
-        - name: docker:dind
+        - name: docker:19-dind
           command: ["--tls=false"]
     script:
         - docker build -t $IMAGE .
