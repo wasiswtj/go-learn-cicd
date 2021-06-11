@@ -8,7 +8,8 @@ build:
     stage: build
     image: docker:latest
     services:
-        - name: docker:stable-dind
+        - name: docker:dind
+          command: ["--tls=false"]
     script:
         - docker build -t $IMAGE .
         - docker login -u root -p root 192.168.1.3:5000
