@@ -1,7 +1,7 @@
 image: docker:latest
 
 variables:
-    IMAGE: http://localhost:5000/$CI_PROJECT_NAME:$CI_COMMIT_REF_SLUG
+    IMAGE: http://192.168.1.3:5000/$CI_PROJECT_NAME:$CI_COMMIT_REF_SLUG
 
 stages:
     - build
@@ -11,6 +11,6 @@ build:
     services:
         - name: docker:dind
     script:
-        - docker login -u root -p root http://localhost:5000
+        - docker login -u root -p root http://192.168.1.3:5000
         - docker build --pull -t $IMAGE .
         - docker push $IMAGE
