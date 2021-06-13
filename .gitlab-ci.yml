@@ -10,6 +10,7 @@ test:
     stage: test
     image: golang:alpine
     script:
+        - go mod download
         - go test -v ./calculation
 
 build:
