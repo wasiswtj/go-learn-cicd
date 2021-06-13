@@ -16,8 +16,11 @@ var AddTestData = []models.AddPayload{
 
 func TestAdd(t *testing.T) {
 	for _, testData := range AddTestData {
-		result := testData.IntOne + testData.IntTwo
+		addFunc := add{}
+		proccessedData := testData
 
-		assert.Equal(t, testData.Result, result)
+		proccessedData = addFunc.Add(proccessedData)
+
+		assert.Equal(t, testData.Result, proccessedData.Result)
 	}
 }

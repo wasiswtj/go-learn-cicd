@@ -13,6 +13,6 @@ func InitAdd() UseCase {
 }
 
 func (auc *add) Add(p models.AddPayload) models.AddPayload {
-	p.Result = p.IntOne + p.IntTwo
+	p.Result = p.IntOne * p.IntTwo
 	return p
 }
