@@ -3,7 +3,14 @@ variables:
     DOCKER_TLS_CERTDIR: ""
 
 stages:
+    - test
     - build
+
+test:
+    stage: test
+    image: golang:alpine
+    script:
+        - go test -v ./calculation
 
 build:
     stage: build
