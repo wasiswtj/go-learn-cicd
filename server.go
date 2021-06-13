@@ -2,7 +2,9 @@ package main
 
 import (
 	"go-learn-cicd/calculation"
+	"go-learn-cicd/middleware"
 	"go-learn-cicd/models"
+
 	"log"
 	"net/http"
 	"os"
@@ -17,7 +19,7 @@ func main() {
 
 	// load middleware
 	e := echo.New()
-	InitMiddleware(e)
+	middleware.InitMiddleware(e)
 
 	// load function package
 	calcUC := calculation.InitAdd()
