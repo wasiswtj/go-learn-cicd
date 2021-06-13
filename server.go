@@ -1,6 +1,7 @@
 package main
 
 import (
+	"go-learn-cicd/calculation"
 	"go-learn-cicd/models"
 	"log"
 	"net/http"
@@ -11,15 +12,34 @@ import (
 )
 
 func main() {
-	hw := models.HelloWorld{Message: "Hello World!"}
-
 	// load env
 	loadEnv()
 
+	// load middleware
 	e := echo.New()
+	InitMiddleware(e)
+
+	// load function package
+	calcUC := calculation.InitAdd()
+
 	e.GET("/hello", func(c echo.Context) error {
+		hw := models.HelloWorld{Message: "Hello World!"}
 		return c.JSON(http.StatusOK, hw)
 	})
+
+	e.POST("/add", func(c echo.Context) error {
+		p := new(models.AddPayload)
+		if err := c.Bind(p); err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		}
+		if err := c.Validate(p); err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		}
+
+		resp := calcUC.Add(*p)
+		return c.JSON(http.StatusOK, resp)
+	})
+
 	e.Logger.Fatal(e.Start(os.Getenv(`PORT`)))
 }
 
