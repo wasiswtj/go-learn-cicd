@@ -10,7 +10,7 @@ test:
     stage: test
     image: golang:alpine
     script:
-        - go get github.com/stretchr/testify/assert@v1.7.0
+        - go go get -t .
         - go mod download
         - CGO_ENABLED=0 GOOS=linux go test -v ./calculation
 
