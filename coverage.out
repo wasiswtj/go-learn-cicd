@@ -1,0 +1,11 @@
+mode: set
+go-learn-cicd/calculations/usecase/calculation.go:18.76,20.2 1 1
+go-learn-cicd/calculations/usecase/calculation.go:22.63,29.16 5 1
+go-learn-cicd/calculations/usecase/calculation.go:33.2,33.10 1 1
+go-learn-cicd/calculations/usecase/calculation.go:29.16,31.3 1 1
+go-learn-cicd/calculations/handler/calculation_handler.go:20.97,27.2 3 1
+go-learn-cicd/calculations/handler/calculation_handler.go:29.64,32.34 2 1
+go-learn-cicd/calculations/handler/calculation_handler.go:35.2,35.38 1 1
+go-learn-cicd/calculations/handler/calculation_handler.go:39.2,40.36 2 1
+go-learn-cicd/calculations/handler/calculation_handler.go:32.34,34.3 1 1
+go-learn-cicd/calculations/handler/calculation_handler.go:35.38,37.3 1 1

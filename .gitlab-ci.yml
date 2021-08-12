@@ -12,7 +12,8 @@ test:
     script:
         - go get -t .
         - go mod download
-        - CGO_ENABLED=0 GOOS=linux go test -v ./calculation
+        - CGO_ENABLED=0 GOOS=linux go test -v -coverprofile=coverage.out ./calculations/handler/ ./calculations/usecase/
+        - go tool cover -html=coverage.out -o coverage.html
 
 build:
     stage: build
