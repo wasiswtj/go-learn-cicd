@@ -10,17 +10,16 @@ ENV GO111MODULE=on \
 WORKDIR /build
 
 # Copy the code into the container
-COPY . .
-
-RUN ls
+ADD go.mod .
+ADD go.sum .
 
 # Copy and download dependency using go mod
 RUN go mod download
-
-RUN go get -t .
+RUN go mod tidy
 
 # Build the application
-RUN go build -o server .
+ADD . .
+RUN go build -a -installsuffix cgo -o server .
 
 # Build final docker application to run
 FROM alpine:3.9
@@ -30,9 +29,10 @@ WORKDIR /app
 
 # Copy binary from build to main folder
 COPY --from=builder /build/server .
+COPY --from=builder /build/.env .
 
-# Export necessary port
-EXPOSE 3000
+# Add migrations file
+ADD db db
 
 # Command to run when starting the container
 CMD ["/app/server"]

@@ -1,14 +1,20 @@
 package main
 
 import (
-	"go-learn-cicd/calculation"
+	"context"
+	"fmt"
+	calculationHand "go-learn-cicd/calculations/handler"
+	calculationRepo "go-learn-cicd/calculations/repository"
+	calculationUC "go-learn-cicd/calculations/usecase"
 	"go-learn-cicd/middleware"
-	"go-learn-cicd/models"
 
 	"log"
-	"net/http"
 	"os"
 
+	"github.com/go-pg/pg"
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 )
@@ -18,31 +24,22 @@ func main() {
 	loadEnv()
 
 	// load middleware
-	e := echo.New()
-	middleware.InitMiddleware(e)
+	c := echo.New()
+	middleware.InitMiddleware(c)
+
+	// connection pool for database
+	dbPG := dbInitAndMigration()
+
+	// repository package
+	calcRepo := calculationRepo.InitCalculationPsqlRepo(dbPG)
 
 	// load function package
-	calcUC := calculation.InitAdd()
+	calcUC := calculationUC.InitCalculations(calcRepo)
 
-	e.GET("/hello", func(c echo.Context) error {
-		hw := models.HelloWorld{Message: "Hello World!"}
-		return c.JSON(http.StatusOK, hw)
-	})
+	// append all handler
+	_ = calculationHand.InitCalculationHandler(c, calcUC)
 
-	e.POST("/add", func(c echo.Context) error {
-		p := new(models.AddPayload)
-		if err := c.Bind(p); err != nil {
-			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-		}
-		if err := c.Validate(p); err != nil {
-			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-		}
-
-		resp := calcUC.Add(*p)
-		return c.JSON(http.StatusOK, resp)
-	})
-
-	e.Logger.Fatal(e.Start(os.Getenv(`PORT`)))
+	c.Logger.Fatal(c.Start(os.Getenv(`PORT`)))
 }
 
 func loadEnv() {
@@ -51,4 +48,40 @@ func loadEnv() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+}
+
+func dbInitAndMigration() *pg.DB {
+	db := pg.Connect(&pg.Options{
+		Addr:     os.Getenv(`DB_HOST`) + os.Getenv(`DB_PORT`),
+		User:     os.Getenv(`DB_USER`),
+		Password: os.Getenv(`DB_PASS`),
+		Database: os.Getenv(`DB_NAME`),
+	})
+
+	ctx := context.Background()
+
+	_, err := db.ExecContext(ctx, "SELECT 1")
+	if err != nil {
+		panic(err)
+	}
+
+	// for migrations
+	dbConf := db.Options()
+	dbMigrationUrl := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable", dbConf.User, dbConf.Password, dbConf.Addr, dbConf.Database)
+
+	m, err := migrate.New(
+		"file://db/migrations",
+		dbMigrationUrl)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = m.Up()
+
+	if err != nil && err.Error() != "no change" {
+		log.Fatal(err)
+	}
+
+	return db
 }

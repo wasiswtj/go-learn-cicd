@@ -1,0 +1,17 @@
+version: "2.2"
+services:
+  db:
+    image: postgres:9.6-alpine
+    ports:
+      - 54322:5432
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+
+  web:
+    depends_on:
+      - db
+    build: .
+    ports:
+        - "8000:8000"
+    environment: 
+        - PORT=:8000
