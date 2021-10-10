@@ -3,7 +3,6 @@ module go-learn-cicd
 go 1.13
 
 require (
-	github.com/davecgh/go-spew v1.1.1
 	github.com/go-pg/pg v8.0.7+incompatible
 	github.com/go-playground/universal-translator v0.17.0 // indirect
 	github.com/golang-migrate/migrate/v4 v4.14.1
@@ -11,9 +10,7 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/kr/text v0.2.0 // indirect
-	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/echo/v4 v4.3.0
-	github.com/labstack/gommon v0.3.0
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/lib/pq v1.10.2 // indirect
 	github.com/mattn/go-isatty v0.0.13 // indirect
