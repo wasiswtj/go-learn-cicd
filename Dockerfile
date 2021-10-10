@@ -30,6 +30,8 @@ WORKDIR /app
 # Copy binary from build to main folder
 COPY --from=builder /build/server .
 COPY --from=builder /build/.env .
+ADD wait-for-postgres.sh .
+RUN chmod +x wait-for-postgres.sh
 
 # Add migrations file
 ADD db db
