@@ -14,13 +14,19 @@ bcName = "go-learn-cicd"
 
 pipeline {
     // Use the 'golang' Jenkins agent image which is provided with OpenShift 
-    agent {
-        docker { image 'golang:1.13.8-alpine' }
+    agent any
+    tools {
+        go 'go-1.13.8'
     }
     stages {
         stage("Checkout") {
             steps {
                 checkout scm
+            }
+        }
+        stage("Unit Test") {
+            steps {
+                sh 'go test -v -coverprofile=coverage.out ./calculations/handler/ ./calculations/usecase/'
             }
         }
         stage("Docker Build") {
