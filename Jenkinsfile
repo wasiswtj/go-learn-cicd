@@ -18,6 +18,10 @@ pipeline {
     tools {
         go 'go-1.13.8'
     }
+    environment {
+        GO111MODULE = 'on'
+        CGO_ENABLED = 0 
+    }
     stages {
         stage("Checkout") {
             steps {
